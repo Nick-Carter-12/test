@@ -25,13 +25,3 @@ jobs:
           git checkout staging
           git merge origin/editing --no-ff -m "Auto-promote editing → staging"
           git push origin staging
-
-      - name: Create PR from staging → main
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: staging
-          base: main
-          title: "Auto Promotion: staging → main"
-          body: "This PR was automatically generated because staging diverged from main."
-          draft: false
