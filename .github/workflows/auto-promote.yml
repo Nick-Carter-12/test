@@ -8,36 +8,31 @@ on:
 jobs:
   promote:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      # 1. Promote editing -> staging (fast-forward merge or regular merge)
-      - name: Promote editing to staging
+      - name: Set git identity
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions Bot"
+
+      - name: Promote editing → staging
         run: |
           git fetch origin
-
-          git switch staging || git switch -c staging origin/staging
-          git merge origin/editing --no-edit
-
+          git checkout -B staging origin/staging
+          git merge origin/editing --no-ff -m "Auto-promote editing → staging"
           git push origin staging
 
-      # 2. Auto-create or update PR from staging -> main
       - name: Create or update PR for staging → main
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: staging
           base: main
+          branch: staging
           title: "Promote staging to main"
-          body: |
-            Automated PR created because updates reached staging.
-            Please review and merge when ready.
-          draft: false
-          update-existing: true
+          body: "Automated promotion from staging to main"
+          labels: auto-promotion
