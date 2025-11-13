@@ -19,11 +19,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create PR from staging → main
-        uses: repo-sync/pull-request@v2
+      - name: Create or update PR from staging to main
+        uses: peter-evans/create-pull-request@v6
         with:
-          source_branch: "staging"
-          destination_branch: "main"
-          pr_title: "Auto Promotion: staging → main"
-          pr_body: "This PR was automatically created after staging was updated."
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: staging
+          base: main
+          title: "Auto Promotion: staging → main"
+          body: "This PR was automatically created after staging was updated."
+          draft: false
