@@ -1,17 +1,19 @@
 name: Auto PR (staging → main)
 
 on:
-  push:
-    branches:
-      - staging
+  workflow_run:
+    workflows: ["Auto Promote Branches"]
+    types:
+      - completed
 
 jobs:
   create-pr:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
     permissions:
       pull-requests: write
       contents: write
-
-    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -23,6 +25,6 @@ jobs:
           source_branch: "staging"
           destination_branch: "main"
           pr_title: "Auto Promotion: staging → main"
-          pr_body: "This PR was automatically created because new commits were pushed to **staging**."
+          pr_body: "This PR was automatically created after staging was updated."
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_draft: false
