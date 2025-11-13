@@ -1,0 +1,28 @@
+name: Auto PR (staging → main)
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  create-pr:
+    permissions:
+      pull-requests: write
+      contents: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create or update PR from staging to main
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "staging"
+          destination_branch: "main"
+          pr_title: "Auto Promotion: staging → main"
+          pr_body: "This PR was automatically created because new commits were pushed to **staging**."
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_draft: false
