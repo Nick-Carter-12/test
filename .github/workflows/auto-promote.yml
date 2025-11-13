@@ -24,14 +24,5 @@ jobs:
         run: |
           git fetch origin
           git checkout staging
-
-          # Merge editing into staging
-          git merge origin/editing --no-ff -m "Auto-promote editing → staging" || true
-
-          # If no changes happened, create empty commit so pipeline continues
-          if git diff --quiet; then
-            echo "No changes in merge — creating empty sync commit"
-            git commit --allow-empty -m "chore: sync staging (no changes)"
-          fi
-
+          git merge origin/editing --no-ff -m "Auto-promote editing → staging"
           git push origin staging
