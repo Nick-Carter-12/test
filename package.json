@@ -1,0 +1,26 @@
+{
+  "name": "discord-hi-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A simple Discord.js bot with /hi [user] slash command",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "deploy:cmd": "node scripts/deploy-commands.js"
+  },
+  "keywords": [
+    "discord",
+    "discord.js",
+    "slash-commands"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "discord.js": "^14.16.3"
+  }
+}
+
