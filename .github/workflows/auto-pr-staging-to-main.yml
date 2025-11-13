@@ -1,0 +1,30 @@
+name: Auto PR (staging → main)
+
+on:
+  workflow_run:
+    workflows: ["Auto Promote Branches"]
+    types:
+      - completed
+
+jobs:
+  create-pr:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create or update PR from staging to main
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "staging"
+          destination_branch: "main"
+          pr_title: "Auto Promotion: staging → main"
+          pr_body: "This PR was automatically created after staging was updated."
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_draft: false
